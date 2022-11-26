@@ -8,6 +8,8 @@ import csv
 from termcolor import colored
 import json
 import re
+from collections import OrderedDict
+
 
 
 def get_books_links():
@@ -38,7 +40,7 @@ def get_book_data():
         
         desc=soup.find("div",{'class':"item-excerpt trunc"})
         repdesc=desc.text.replace("show more","")
-        regexDesc=re.sub("\s{2,}"," ",repdesc)
+        regexDesc=re.sub("\s{2,}"," ",repdesc).strip()
         # print(regexDesc)
         # print(f'"{repdesc.strip()}"')
         # description=desc
@@ -52,6 +54,19 @@ def get_book_data():
         bookDetails=soup.find('ul',{'class':'biblio-info'}).find_all('li')
         detailsIndex=[0,2,4,5]
         # print(bookDetails)
+        cat=soup.find('ol',{'class':'breadcrumb'}).find_all('li')
+        catList=[]
+        for z in cat[1:]:
+            catName=re.sub("\s{2,}"," ",z.text).strip()
+            catNameWithoutSpChar=re.sub('[^A-Za-z]+', ' ', catName)
+            catList.append(catNameWithoutSpChar)
+
+        # print(catList)
+        catList=list(dict.fromkeys(catList))
+        # print(catList)
+
+
+
         dList=[]
         for k in range(len(bookDetails)):
             if k in detailsIndex:
@@ -62,8 +77,8 @@ def get_book_data():
         # print(dList)
         format,publication_date,publication_city_country,language=[q for q in dList]
         # print(format,publication_date,publication_city_country,language)
-        keys=['id','image','title','description','author_name','price,',"format","publication_date","publication_city_country","language"]
-        values=[i,image,title,regexDesc,authorName,price,format,publication_date,publication_city_country,language]
+        keys=['id','image','title','description','author_name','price,',"format","publication_date","publication_city_country","language",'categories']
+        values=[i,image,title,regexDesc,authorName,price,format,publication_date,publication_city_country,language,catList]
         book={}
         for e in range(len(keys)):
             book[keys[e]]=values[e]
@@ -72,7 +87,18 @@ def get_book_data():
 
     return books
 
-        
+def csv_file():
+    books=get_book_data()
+    with open("books_data.csv", 'w',encoding="utf-8") as csvfile: 
+        writer = csv.DictWriter(csvfile, fieldnames =['id','image','title','description','author_name','price,',"format","publication_date","publication_city_country","language","categories"]) 
+
+        writer.writeheader() 
+
+        # writing data rows 
+        writer.writerows(books) 
+        print(colored("added secc...\n",'blue'))
+
+
 # print(get_book_data())   
 def Json_file():
     books=get_book_data()
@@ -82,7 +108,9 @@ def Json_file():
 if __name__ == "__main__":
     start_time = time.time()
     print(colored("Start...\n",'blue'))
-    Json_file()
+    # Json_file()
+    csv_file()
+    # get_book_data()
     print(colored("\nDone :)","blue"))
     print(colored("--- %s seconds ---"%(time.time() - start_time),"yellow"))
 
