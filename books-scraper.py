@@ -22,6 +22,7 @@ def get_books_links():
             links.append(i.strip("\n"))
     return links
 # print(get_books_links())
+categories=[]
 def get_book_data():
     books=[]
     booksLinks=get_books_links()
@@ -62,11 +63,12 @@ def get_book_data():
         for z in cat[1:]:
             catName=re.sub("\s{2,}"," ",z.text).strip()
             catNameWithoutSpChar=re.sub('[^A-Za-z]+', ' ', catName)
+            categories.append(catNameWithoutSpChar)
             catList.append(catNameWithoutSpChar)
 
         # print(catList)
         catList=list(dict.fromkeys(catList))
-        # print(catList)
+        # print(len(categories))
 
 
 
@@ -87,9 +89,40 @@ def get_book_data():
             book[keys[e]]=values[e]
         books.append(book)
         # print(book)
+    # print(catList,'*****',categories)
 
     return books
+# get_book_data()
+# print('*****************************************')
+# print(categories)
+catList=[]
 
+def csv_cat():
+    books=get_book_data()
+    newCarList=list(set(categories))
+    removedups=list(dict.fromkeys(newCarList))
+    # print(removedups)
+    for i in range(len(removedups)):
+        catDict={}
+        catDict['id']=i
+        catDict['category_name']=removedups[i]
+        catList.append(catDict)
+        # print(catDict)
+        # print('**')
+        # print(len(catList))
+    # print(len(catList))
+
+        
+    with open("books_cats.csv", 'w',encoding="utf-8") as csvfile: 
+        writer = csv.DictWriter(csvfile, fieldnames =['id','category_name']) 
+
+        writer.writeheader() 
+
+        # writing data rows 
+        writer.writerows(catList) 
+        print(colored("added secc...\n",'blue'))
+
+csv_cat()
 def csv_file():
     books=get_book_data()
     with open("books_data.csv", 'w',encoding="utf-8") as csvfile: 
@@ -108,16 +141,17 @@ def Json_file():
     with open('books_data.json','w',encoding='utf-8') as jsonf:
         jsonf.write(json.dumps(books,indent=4))
 
-if __name__ == "__main__":
-    start_time = time.time()
-    print(colored("Start...\n",'blue'))
-    # Json_file()
-    csv_file()
-    # book=get_book_data()
-    print(colored("\nDone :)","blue"))
-    print(colored("--- %s seconds ---"%(time.time() - start_time),"yellow"))
+# if __name__ == "__main__":
+#     start_time = time.time()
+#     print(colored("Start...\n",'blue'))
+#     # Json_file()
+#     csv_file()
+#     # book=get_book_data()
+#     print(colored("\nDone :)","blue"))
+#     print(colored("--- %s seconds ---"%(time.time() - start_time),"yellow"))
 
 
 # print(get_book_data())
+# csv_cat()
 
 
