@@ -83,46 +83,32 @@ def get_book_data():
         format,publication_date,publication_city_country,language=[q for q in dList]
         # print(format,publication_date,publication_city_country,language)
         keys=['id','image','title','description','author_name','price',"format","publication_date","publication_city_country","language",'categories']
-        values=[i,image,regexTitle,regexDesc,regexAuthor,price,format,publication_date,publication_city_country,language,catList]
+        values=[i,image,regexTitle,regexDesc,regexAuthor,price,format,publication_date,publication_city_country,language,','.join(catList)]
         book={}
         for e in range(len(keys)):
             book[keys[e]]=values[e]
         books.append(book)
-        # print(book)
-    # print(catList,'*****',categories)
+
 
     return books
-# get_book_data()
-# print('*****************************************')
-# print(categories)
-catList=[]
 
 def csv_cat():
+    catList=[]
     books=get_book_data()
     newCarList=list(set(categories))
     removedups=list(dict.fromkeys(newCarList))
-    # print(removedups)
     for i in range(len(removedups)):
         catDict={}
         catDict['id']=i
         catDict['category_name']=removedups[i]
         catList.append(catDict)
-        # print(catDict)
-        # print('**')
-        # print(len(catList))
-    # print(len(catList))
-
-        
     with open("books_cats.csv", 'w',encoding="utf-8") as csvfile: 
         writer = csv.DictWriter(csvfile, fieldnames =['id','category_name']) 
-
         writer.writeheader() 
-
         # writing data rows 
         writer.writerows(catList) 
         print(colored("added secc...\n",'blue'))
 
-csv_cat()
 def csv_file():
     books=get_book_data()
     with open("books_data.csv", 'w',encoding="utf-8") as csvfile: 
@@ -135,23 +121,25 @@ def csv_file():
         print(colored("added secc...\n",'blue'))
 
 
-# print(get_book_data())   
+  
 def Json_file():
     books=get_book_data()
     with open('books_data.json','w',encoding='utf-8') as jsonf:
         jsonf.write(json.dumps(books,indent=4))
 
-# if __name__ == "__main__":
-#     start_time = time.time()
-#     print(colored("Start...\n",'blue'))
-#     # Json_file()
-#     csv_file()
-#     # book=get_book_data()
-#     print(colored("\nDone :)","blue"))
-#     print(colored("--- %s seconds ---"%(time.time() - start_time),"yellow"))
+if __name__ == "__main__":
+    start_time = time.time()
+    print(colored("Start...\n",'blue'))
+    # Json_file()
+    csv_file()
+    # csv_cat()
 
 
-# print(get_book_data())
-# csv_cat()
+    # book=get_book_data()
+    print(colored("\nDone :)","blue"))
+    print(colored("--- %s seconds ---"%(time.time() - start_time),"yellow"))
+
+
+
 
 
