@@ -52,8 +52,8 @@ def get_book_data():
         regexAuthor=re.sub("\s{2,}|,"," ",authorName)
         # print(authorName)
 
-        price=soup.find('span',{'class':'sale-price'}).text[3:]
-        # print(price)
+        price=soup.find('span',{'class':'sale-price'}).text
+        print(price)
 
         bookDetails=soup.find('ul',{'class':'biblio-info'}).find_all('li')
         detailsIndex=[0,2,4,5]
@@ -131,8 +131,9 @@ if __name__ == "__main__":
     start_time = time.time()
     print(colored("Start...\n",'blue'))
     # Json_file()
-    csv_file()
+    # csv_file()
     # csv_cat()
+    get_book_data()
 
 
     # book=get_book_data()
