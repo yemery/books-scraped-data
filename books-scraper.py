@@ -21,12 +21,12 @@ def get_books_links():
                 continue
             links.append(i.strip("\n"))
     return links
-# print(get_books_links())
 categories=[]
 def get_book_data():
     books=[]
     booksLinks=get_books_links()
     for i in range(0,len(booksLinks)):
+        print(i)
         URL=booksLinks[i]
         r=requests.get(URL)
         soup=BeautifulSoup(r.content,'html5lib')
@@ -48,12 +48,12 @@ def get_book_data():
         # print(f'"{repdesc.strip()}"')
         # description=desc
         NameContainer=containerDiv.find('div',{'class':'author-info hidden-md'})
-        authorName=NameContainer.find_all('span')[1].text.strip()
-        regexAuthor=re.sub("\s{2,}|,"," ",authorName)
-        # print(authorName)
+        authorName=NameContainer.find('span').find('span').text.strip()
+        # regexAuthor=re.sub("\s{2,}|,"," ",authorName)
+        print(authorName)
 
         price=soup.find('span',{'class':'sale-price'}).text
-        print(price)
+        # print(price)
 
         bookDetails=soup.find('ul',{'class':'biblio-info'}).find_all('li')
         detailsIndex=[0,2,4,5]
@@ -82,8 +82,8 @@ def get_book_data():
         # print(dList)
         format,publication_date,publication_city_country,language=[q for q in dList]
         # print(format,publication_date,publication_city_country,language)
-        keys=['id','image','title','description','author_name','price',"format","publication_date","publication_city_country","language",'categories']
-        values=[i,image,regexTitle,regexDesc,regexAuthor,price,format,publication_date,publication_city_country,language,','.join(catList)]
+        keys=['id','image','title','description','author_name','price',"format","publication_date","publication_city_country","language",'tags']
+        values=[i,image,regexTitle,regexDesc,authorName,price,format,publication_date,publication_city_country,language,';'.join(catList)]
         book={}
         for e in range(len(keys)):
             book[keys[e]]=values[e]
@@ -110,15 +110,19 @@ def csv_cat():
         print(colored("added secc...\n",'blue'))
 
 def csv_file():
-    books=get_book_data()
-    with open("books_data.csv", 'w',encoding="utf-8") as csvfile: 
-        writer = csv.DictWriter(csvfile, fieldnames =['id','image','title','description','author_name','price',"format","publication_date","publication_city_country","language","categories"]) 
+ 
+    '''
+'''
 
-        writer.writeheader() 
+    input = open("books_data.json")
+    data = json.load(input)
+    input.close()
+    output = csv.writer(open("books_data.csv",'w'))
+    output.writerow(data[0].keys())  # header row
+    for row in data:
+        output.writerow(row.values())
 
-        # writing data rows 
-        writer.writerows(books) 
-        print(colored("added secc...\n",'blue'))
+ 
 
 
   
@@ -131,9 +135,9 @@ if __name__ == "__main__":
     start_time = time.time()
     print(colored("Start...\n",'blue'))
     # Json_file()
-    # csv_file()
+    csv_file()
     # csv_cat()
-    get_book_data()
+    # get_book_data()
 
 
     # book=get_book_data()
