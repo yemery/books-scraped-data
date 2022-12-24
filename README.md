@@ -1,5 +1,5 @@
 # books-scraped-data
-this code is a web scraping script written in Python. The goal of the code is to scrape data about books from a website and store it in a structured format.
+this code is to scrape information about books from a website and store it in a structured manner in a CSV file and a JSON file. The information being scraped includes the book's ID, image, title, description, author name, price, format, publication date, publication city and country, language, and tags (categories).
 
 The code uses several libraries and technologies to achieve this goal, including:
 
