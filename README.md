@@ -1,5 +1,11 @@
 # books-scraped-data
-this code is to scrape information about books from a website and store it in a structured manner in a CSV file and a JSON file. The information being scraped includes the book's ID, image, title, description, author name, price, format, publication date, publication city and country, language, and tags (categories).
+This code appears to be scraping data from a website and organizing the data into a list of dictionaries, where each dictionary represents a book and contains various pieces of information about the book, such as its title, author, and publication date.
+
+The code does this by making HTTP requests to a series of URLs, which are read from a file called "urls.txt", and then parsing the HTML content of the resulting web pages using the BeautifulSoup library. It extracts the relevant data from the web page and organizes it into the dictionary for each book.
+
+The code also appears to be using the re library to perform some regular expression matching and substitution on the data as it is being extracted, in order to clean up the data and remove any unwanted characters or formatting.
+
+Finally, the code returns the list of dictionaries as the result of the get_book_data function.
 
 The code uses several libraries and technologies to achieve this goal, including:
 
@@ -22,3 +28,5 @@ json: a built-in Python library for working with JSON (JavaScript Object Notatio
 re: a built-in Python library for working with regular expressions, used to manipulate strings.
 
 collections: a built-in Python library for working with collections of data, used to create an ordered dictionary.
+
+
